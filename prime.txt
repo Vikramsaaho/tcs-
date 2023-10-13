@@ -1,0 +1,47 @@
+def PrimeConstruction(numbers):
+  """Computes the smallest prime number that gives a remainder of q when divided by all distinct numbers in the input except q.
+
+  Args:
+    numbers: A list of distinct natural numbers.
+
+  Returns:
+    The smallest prime number that gives a remainder of q when divided by all distinct numbers in the input except q, or None if there is no such number.
+  """
+
+  q = min(numbers)
+  numbers.remove(q)
+
+  # Check if q is less than any of the other numbers in the input.
+  if any(q < number for number in numbers):
+    return None
+
+  # Find the least common multiple of all the numbers in the input.
+  lcm = 1
+  for number in numbers:
+    lcm = lcm * number // math.gcd(lcm, number)
+
+  # Iterate over all multiples of the LCM, starting from the LCM itself.
+  # For each multiple, check if LCM + q is prime. If it is, then return
+  # that number as the solution.
+  for multiple in range(lcm, 10**6 + 1, lcm):
+    if is_prime(multiple + q):
+      return multiple + q
+
+  # If no such prime number is found, then there is no solution.
+  return None
+
+
+def is_prime(n):
+  """Checks if n is a prime number.
+
+  Args:
+    n: A positive integer.
+
+  Returns:
+    True if n is a prime number, False otherwise.
+  """
+
+  for i in range(2, int(n**0.5) + 1):
+    if n % i == 0:
+      return False
+  return True
